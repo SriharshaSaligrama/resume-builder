@@ -1,5 +1,5 @@
 import React from 'react';
-import { Resume, TemplateId, FontFamily } from '../types/resume';
+import { Resume, TemplateId, FontFamily, LayoutStyle } from '../types/resume';
 import { ModernBlueTemplate } from './templates/ModernBlueTemplate';
 import { ElegantPurpleTemplate } from './templates/ElegantPurpleTemplate';
 import { ProfessionalGreenTemplate } from './templates/ProfessionalGreenTemplate';
@@ -10,15 +10,17 @@ interface ResumePreviewProps {
   resume: Resume;
   templateId?: TemplateId;
   fontFamily?: FontFamily;
+  layoutStyle?: LayoutStyle;
 }
 
 export const ResumePreview: React.FC<ResumePreviewProps> = ({ 
   resume, 
   templateId = 'modern-blue',
-  fontFamily = 'inter'
+  fontFamily = 'inter',
+  layoutStyle = 'single-column'
 }) => {
   const renderTemplate = () => {
-    const templateProps = { resume, fontFamily };
+    const templateProps = { resume, fontFamily, layoutStyle };
     
     switch (templateId) {
       case 'modern-blue':

@@ -1,21 +1,26 @@
 import React from 'react';
-import { TemplateId, FontFamily } from '../types/resume';
+import { TemplateId, FontFamily, LayoutStyle } from '../types/resume';
 import { resumeTemplates } from '../data/templates';
 import { FontSelector } from './FontSelector';
+import { LayoutSelector } from './LayoutSelector';
 import { Palette, Check } from 'lucide-react';
 
 interface TemplateSelectorProps {
   selectedTemplate: TemplateId;
   selectedFont: FontFamily;
+  selectedLayout: LayoutStyle;
   onTemplateChange: (templateId: TemplateId) => void;
   onFontChange: (fontId: FontFamily) => void;
+  onLayoutChange: (layoutId: LayoutStyle) => void;
 }
 
 export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   selectedTemplate,
   selectedFont,
+  selectedLayout,
   onTemplateChange,
   onFontChange,
+  onLayoutChange,
 }) => {
   const getColorClasses = (primaryColor: string) => {
     const colorMap = {
@@ -45,7 +50,7 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <div className="flex items-center gap-2 mb-4">
           <Palette size={20} />
-          <h2 className="text-xl font-semibold text-gray-800">Choose Template</h2>
+          <h2 className="text-xl font-semibold text-gray-800">Choose Color Theme</h2>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -91,6 +96,12 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
           ))}
         </div>
       </div>
+
+      {/* Layout Selection */}
+      <LayoutSelector 
+        selectedLayout={selectedLayout}
+        onLayoutChange={onLayoutChange}
+      />
 
       {/* Font Selection */}
       <FontSelector 

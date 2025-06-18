@@ -59,6 +59,8 @@ export type TemplateId = 'modern-blue' | 'elegant-purple' | 'professional-green'
 
 export type FontFamily = 'inter' | 'roboto' | 'open-sans' | 'lato' | 'source-sans' | 'poppins' | 'nunito' | 'work-sans';
 
+export type LayoutStyle = 'single-column' | 'two-column' | 'sidebar-left' | 'sidebar-right' | 'compact';
+
 export interface ResumeTemplate {
   id: TemplateId;
   name: string;
@@ -74,4 +76,13 @@ export interface FontOption {
   description: string;
   fontFamily: string;
   category: 'modern' | 'classic' | 'elegant';
+}
+
+export interface LayoutOption {
+  id: LayoutStyle;
+  name: string;
+  description: string;
+  icon: string;
+  features: string[];
+  bestFor: string[];
 }

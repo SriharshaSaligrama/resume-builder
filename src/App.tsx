@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Resume, TemplateId, FontFamily } from './types/resume';
+import { Resume, TemplateId, FontFamily, LayoutStyle } from './types/resume';
 import { PersonalInfoEditor } from './components/PersonalInfoEditor';
 import { ExperienceEditor } from './components/ExperienceEditor';
 import { ProjectsEditor } from './components/ProjectsEditor';
@@ -45,6 +45,7 @@ function App() {
     const [resume, setResume] = useLocalStorage<Resume>('resume-data', initialResume);
     const [selectedTemplate, setSelectedTemplate] = useLocalStorage<TemplateId>('selected-template', 'modern-blue');
     const [selectedFont, setSelectedFont] = useLocalStorage<FontFamily>('selected-font', 'inter');
+    const [selectedLayout, setSelectedLayout] = useLocalStorage<LayoutStyle>('selected-layout', 'single-column');
     const [showPreview, setShowPreview] = useState(false);
     const [activeTab, setActiveTab] = useState('personal');
 
@@ -180,8 +181,10 @@ function App() {
                                 <TemplateSelector
                                     selectedTemplate={selectedTemplate}
                                     selectedFont={selectedFont}
+                                    selectedLayout={selectedLayout}
                                     onTemplateChange={setSelectedTemplate}
                                     onFontChange={setSelectedFont}
+                                    onLayoutChange={setSelectedLayout}
                                 />
                             )}
                         </div>
@@ -200,6 +203,7 @@ function App() {
                                         resume={resume}
                                         templateId={selectedTemplate}
                                         fontFamily={selectedFont}
+                                        layoutStyle={selectedLayout}
                                     />
                                 </div>
                             </div>
@@ -212,6 +216,7 @@ function App() {
                             resume={resume}
                             templateId={selectedTemplate}
                             fontFamily={selectedFont}
+                            layoutStyle={selectedLayout}
                         />
                     </div>
                 </div>
