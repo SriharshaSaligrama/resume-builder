@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Resume } from './types/resume';
+import { Resume, TemplateId, FontFamily } from './types/resume';
 import { PersonalInfoEditor } from './components/PersonalInfoEditor';
 import { ExperienceEditor } from './components/ExperienceEditor';
 import { ProjectsEditor } from './components/ProjectsEditor';
 import { SkillsEditor } from './components/SkillsEditor';
 import { EducationEditor } from './components/EducationEditor';
+import { TemplateSelector } from './components/TemplateSelector';
 import { ResumePreview } from './components/ResumePreview';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { FileText, Download, Eye, EyeOff, Save } from 'lucide-react';
@@ -42,6 +43,8 @@ const initialResume: Resume = {
 
 function App() {
     const [resume, setResume] = useLocalStorage<Resume>('resume-data', initialResume);
+    const [selectedTemplate, setSelectedTemplate] = useLocalStorage<TemplateId>('selected-template', 'modern-blue');
+    const [selectedFont, setSelectedFont] = useLocalStorage<FontFamily>('selected-font', 'inter');
     const [showPreview, setShowPreview] = useState(false);
     const [activeTab, setActiveTab] = useState('personal');
 
@@ -67,6 +70,7 @@ function App() {
         { id: 'projects', label: 'Projects', icon: '🚀' },
         { id: 'skills', label: 'Skills', icon: '🛠️' },
         { id: 'education', label: 'Education', icon: '🎓' },
+        { id: 'template', label: 'Design', icon: '🎨' },
     ];
 
     return (
@@ -171,6 +175,15 @@ function App() {
                                     onChange={(education) => setResume({ ...resume, education })}
                                 />
                             )}
+
+                            {activeTab === 'template' && (
+                                <TemplateSelector
+                                    selectedTemplate={selectedTemplate}
+                                    selectedFont={selectedFont}
+                                    onTemplateChange={setSelectedTemplate}
+                                    onFontChange={setSelectedFont}
+                                />
+                            )}
                         </div>
                     </div>
 
@@ -183,7 +196,11 @@ function App() {
                                     Live Preview
                                 </h2>
                                 <div className="bg-white rounded-lg overflow-hidden shadow-lg print-container">
-                                    <ResumePreview resume={resume} />
+                                    <ResumePreview
+                                        resume={resume}
+                                        templateId={selectedTemplate}
+                                        fontFamily={selectedFont}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -191,7 +208,11 @@ function App() {
 
                     {/* Print-only Resume */}
                     <div className="hidden print:block">
-                        <ResumePreview resume={resume} />
+                        <ResumePreview
+                            resume={resume}
+                            templateId={selectedTemplate}
+                            fontFamily={selectedFont}
+                        />
                     </div>
                 </div>
             </div>
@@ -330,6 +351,26 @@ function App() {
             background-image: none !important;
           }
           
+          .print\\:bg-purple-700 {
+            background-color: #7c3aed !important;
+            background-image: none !important;
+          }
+          
+          .print\\:bg-emerald-700 {
+            background-color: #047857 !important;
+            background-image: none !important;
+          }
+          
+          .print\\:bg-orange-700 {
+            background-color: #c2410c !important;
+            background-image: none !important;
+          }
+          
+          .print\\:bg-gray-800 {
+            background-color: #1f2937 !important;
+            background-image: none !important;
+          }
+          
           /* Text colors for print */
           .print\\:text-blue-700 {
             color: #1d4ed8 !important;
@@ -337,6 +378,30 @@ function App() {
           
           .print\\:text-blue-900 {
             color: #1e3a8a !important;
+          }
+          
+          .print\\:text-purple-700 {
+            color: #7c3aed !important;
+          }
+          
+          .print\\:text-purple-900 {
+            color: #581c87 !important;
+          }
+          
+          .print\\:text-emerald-700 {
+            color: #047857 !important;
+          }
+          
+          .print\\:text-emerald-900 {
+            color: #064e3b !important;
+          }
+          
+          .print\\:text-orange-700 {
+            color: #c2410c !important;
+          }
+          
+          .print\\:text-orange-900 {
+            color: #9a3412 !important;
           }
           
           .print\\:text-gray-700 {
@@ -354,6 +419,18 @@ function App() {
           /* Background colors for print */
           .print\\:bg-blue-50 {
             background-color: #eff6ff !important;
+          }
+          
+          .print\\:bg-purple-50 {
+            background-color: #faf5ff !important;
+          }
+          
+          .print\\:bg-emerald-50 {
+            background-color: #ecfdf5 !important;
+          }
+          
+          .print\\:bg-orange-50 {
+            background-color: #fff7ed !important;
           }
           
           .print\\:bg-gray-50 {

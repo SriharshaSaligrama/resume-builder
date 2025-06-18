@@ -54,3 +54,24 @@ export interface Resume {
   education: Education[];
   skills: Skill[];
 }
+
+export type TemplateId = 'modern-blue' | 'elegant-purple' | 'professional-green' | 'creative-orange' | 'minimal-gray';
+
+export type FontFamily = 'inter' | 'roboto' | 'open-sans' | 'lato' | 'source-sans' | 'poppins' | 'nunito' | 'work-sans';
+
+export interface ResumeTemplate {
+  id: TemplateId;
+  name: string;
+  description: string;
+  primaryColor: string;
+  accentColor: string;
+  preview: string;
+}
+
+export interface FontOption {
+  id: FontFamily;
+  name: string;
+  description: string;
+  fontFamily: string;
+  category: 'modern' | 'classic' | 'elegant';
+}
