@@ -126,10 +126,8 @@ export const ExperienceEditor: React.FC<ExperienceEditorProps> = ({
         // Calculate the correct insertion index
         // If we're moving the item to a position after its original position,
         // we need to account for the fact that we've already removed it
-        const insertIndex = draggedIndex < dropIndex ? dropIndex : dropIndex;
-
         // Insert the item at the new position
-        newExperiences.splice(insertIndex, 0, draggedItem);
+        newExperiences.splice(dropIndex, 0, draggedItem);
 
         onChange(newExperiences);
         setDraggedIndex(null);
