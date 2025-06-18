@@ -13,6 +13,8 @@ export const ExperienceEditor: React.FC<ExperienceEditorProps> = ({
 }) => {
     const [expandedId, setExpandedId] = useState<string | null>(null);
     const [techInputs, setTechInputs] = useState<Record<string, string>>({});
+    const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+    const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
     const addExperience = () => {
         const newExperience: Experience = {
@@ -73,10 +75,7 @@ export const ExperienceEditor: React.FC<ExperienceEditorProps> = ({
     };
 
     const handleTechnologiesChange = (id: string, value: string) => {
-        // Update the input state
         setTechInputs(prev => ({ ...prev, [id]: value }));
-
-        // Update the technologies array
         const technologies = value
             .split(',')
             .map((tech) => tech.trim())
@@ -85,12 +84,61 @@ export const ExperienceEditor: React.FC<ExperienceEditorProps> = ({
     };
 
     const getTechInputValue = (id: string) => {
-        // If we have a stored input value, use it; otherwise use the joined technologies
         if (techInputs[id] !== undefined) {
             return techInputs[id];
         }
         const experience = experiences.find(exp => exp.id === id);
         return experience ? experience.technologies.join(', ') : '';
+    };
+
+    // Drag and Drop handlers
+    const handleDragStart = (e: React.DragEvent, index: number) => {
+        setDraggedIndex(index);
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/html', '');
+    };
+
+    const handleDragOver = (e: React.DragEvent, index: number) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        setDragOverIndex(index);
+    };
+
+    const handleDragLeave = () => {
+        setDragOverIndex(null);
+    };
+
+    const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+        e.preventDefault();
+
+        if (draggedIndex === null || draggedIndex === dropIndex) {
+            setDraggedIndex(null);
+            setDragOverIndex(null);
+            return;
+        }
+
+        const newExperiences = [...experiences];
+        const draggedItem = newExperiences[draggedIndex];
+
+        // Remove the dragged item from its original position
+        newExperiences.splice(draggedIndex, 1);
+
+        // Calculate the correct insertion index
+        // If we're moving the item to a position after its original position,
+        // we need to account for the fact that we've already removed it
+        const insertIndex = draggedIndex < dropIndex ? dropIndex : dropIndex;
+
+        // Insert the item at the new position
+        newExperiences.splice(insertIndex, 0, draggedItem);
+
+        onChange(newExperiences);
+        setDraggedIndex(null);
+        setDragOverIndex(null);
+    };
+
+    const handleDragEnd = () => {
+        setDraggedIndex(null);
+        setDragOverIndex(null);
     };
 
     return (
@@ -110,14 +158,27 @@ export const ExperienceEditor: React.FC<ExperienceEditorProps> = ({
             </div>
 
             <div className="space-y-4">
-                {experiences.map((experience) => (
+                {experiences.map((experience, index) => (
                     <div
                         key={experience.id}
-                        className="border border-gray-200 rounded-lg p-4"
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, index)}
+                        onDragOver={(e) => handleDragOver(e, index)}
+                        onDragLeave={handleDragLeave}
+                        onDrop={(e) => handleDrop(e, index)}
+                        onDragEnd={handleDragEnd}
+                        className={`border border-gray-200 rounded-lg p-4 transition-all duration-200 ${draggedIndex === index ? 'opacity-50 scale-95' : ''
+                            } ${dragOverIndex === index && draggedIndex !== index
+                                ? 'border-blue-400 bg-blue-50 transform scale-102'
+                                : ''
+                            } cursor-move hover:shadow-md`}
                     >
                         <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
-                                <GripVertical size={16} className="text-gray-400" />
+                                <GripVertical
+                                    size={16}
+                                    className="text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing"
+                                />
                                 <button
                                     onClick={() =>
                                         setExpandedId(expandedId === experience.id ? null : experience.id)
@@ -295,6 +356,14 @@ export const ExperienceEditor: React.FC<ExperienceEditorProps> = ({
                     </div>
                 ))}
             </div>
+
+            {experiences.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                    <Briefcase size={48} className="mx-auto mb-3 opacity-30" />
+                    <p>No work experience added yet.</p>
+                    <p className="text-sm">Click "Add Experience" to get started.</p>
+                </div>
+            )}
         </div>
     );
 };

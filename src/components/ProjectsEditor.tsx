@@ -13,6 +13,8 @@ export const ProjectsEditor: React.FC<ProjectsEditorProps> = ({
 }) => {
     const [expandedId, setExpandedId] = useState<string | null>(null);
     const [techInputs, setTechInputs] = useState<Record<string, string>>({});
+    const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+    const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
     const addProject = () => {
         const newProject: Project = {
@@ -69,10 +71,7 @@ export const ProjectsEditor: React.FC<ProjectsEditorProps> = ({
     };
 
     const handleTechnologiesChange = (id: string, value: string) => {
-        // Update the input state
         setTechInputs(prev => ({ ...prev, [id]: value }));
-
-        // Update the technologies array
         const technologies = value
             .split(',')
             .map((tech) => tech.trim())
@@ -81,12 +80,59 @@ export const ProjectsEditor: React.FC<ProjectsEditorProps> = ({
     };
 
     const getTechInputValue = (id: string) => {
-        // If we have a stored input value, use it; otherwise use the joined technologies
         if (techInputs[id] !== undefined) {
             return techInputs[id];
         }
         const project = projects.find(proj => proj.id === id);
         return project ? project.technologies.join(', ') : '';
+    };
+
+    // Drag and Drop handlers
+    const handleDragStart = (e: React.DragEvent, index: number) => {
+        setDraggedIndex(index);
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/html', '');
+    };
+
+    const handleDragOver = (e: React.DragEvent, index: number) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        setDragOverIndex(index);
+    };
+
+    const handleDragLeave = () => {
+        setDragOverIndex(null);
+    };
+
+    const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+        e.preventDefault();
+
+        if (draggedIndex === null || draggedIndex === dropIndex) {
+            setDraggedIndex(null);
+            setDragOverIndex(null);
+            return;
+        }
+
+        const newProjects = [...projects];
+        const draggedItem = newProjects[draggedIndex];
+
+        // Remove the dragged item from its original position
+        newProjects.splice(draggedIndex, 1);
+
+        // Calculate the correct insertion index
+        // If we're moving the item to a position after its original position,
+        // we need to account for the fact that we've already removed it
+        // Insert the item at the new position
+        newProjects.splice(dropIndex, 0, draggedItem);
+
+        onChange(newProjects);
+        setDraggedIndex(null);
+        setDragOverIndex(null);
+    };
+
+    const handleDragEnd = () => {
+        setDraggedIndex(null);
+        setDragOverIndex(null);
     };
 
     return (
@@ -106,14 +152,27 @@ export const ProjectsEditor: React.FC<ProjectsEditorProps> = ({
             </div>
 
             <div className="space-y-4">
-                {projects.map((project) => (
+                {projects.map((project, index) => (
                     <div
                         key={project.id}
-                        className="border border-gray-200 rounded-lg p-4"
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, index)}
+                        onDragOver={(e) => handleDragOver(e, index)}
+                        onDragLeave={handleDragLeave}
+                        onDrop={(e) => handleDrop(e, index)}
+                        onDragEnd={handleDragEnd}
+                        className={`border border-gray-200 rounded-lg p-4 transition-all duration-200 ${draggedIndex === index ? 'opacity-50 scale-95' : ''
+                            } ${dragOverIndex === index && draggedIndex !== index
+                                ? 'border-blue-400 bg-blue-50 transform scale-102'
+                                : ''
+                            } cursor-move hover:shadow-md`}
                     >
                         <div className="flex items-start justify-between mb-2">
                             <div className="flex items-start gap-2 min-w-0 flex-1">
-                                <GripVertical size={16} className="text-gray-400 mt-1 flex-shrink-0" />
+                                <GripVertical
+                                    size={16}
+                                    className="text-gray-400 hover:text-gray-600 mt-1 flex-shrink-0 cursor-grab active:cursor-grabbing"
+                                />
                                 <button
                                     onClick={() =>
                                         setExpandedId(expandedId === project.id ? null : project.id)
@@ -249,7 +308,7 @@ export const ProjectsEditor: React.FC<ProjectsEditorProps> = ({
                                             {project.technologies.map((tech, index) => (
                                                 <span
                                                     key={index}
-                                                    className="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-md"
+                                                    className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-md"
                                                 >
                                                     {tech}
                                                 </span>
