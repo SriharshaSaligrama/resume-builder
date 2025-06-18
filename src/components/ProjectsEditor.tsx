@@ -121,7 +121,7 @@ export const ProjectsEditor: React.FC<ProjectsEditorProps> = ({
 
         // Calculate the correct insertion index
         // If we're moving the item to a position after its original position,
-        // we need to account for the fact that we've already removed it
+        // we need to account for the fact that we've already removed it    
         // Insert the item at the new position
         newProjects.splice(dropIndex, 0, draggedItem);
 
@@ -167,17 +167,17 @@ export const ProjectsEditor: React.FC<ProjectsEditorProps> = ({
                                 : ''
                             } cursor-move hover:shadow-md`}
                     >
-                        <div className="flex items-start justify-between mb-2">
-                            <div className="flex items-start gap-2 min-w-0 flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
                                 <GripVertical
                                     size={16}
-                                    className="text-gray-400 hover:text-gray-600 mt-1 flex-shrink-0 cursor-grab active:cursor-grabbing"
+                                    className="text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing"
                                 />
                                 <button
                                     onClick={() =>
                                         setExpandedId(expandedId === project.id ? null : project.id)
                                     }
-                                    className="text-left flex-1 min-w-0"
+                                    className="text-left flex-1"
                                 >
                                     <h3 className="font-medium text-gray-800 break-words">
                                         {project.name || 'New Project'}
