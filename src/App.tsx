@@ -84,7 +84,7 @@ function App() {
                             <FileText className="text-blue-600" size={32} />
                             <div>
                                 <h1 className="text-2xl font-bold text-gray-900">Resume Builder</h1>
-                                <p className="text-sm text-gray-600">Professional resume for software engineers</p>
+                                <p className="text-sm text-gray-600">Resume for Professionals</p>
                             </div>
                         </div>
 
@@ -129,8 +129,8 @@ function App() {
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
                                         className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === tab.id
-                                                ? 'bg-blue-600 text-white'
-                                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                                            ? 'bg-blue-600 text-white'
+                                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                                             }`}
                                     >
                                         <span>{tab.icon}</span>
