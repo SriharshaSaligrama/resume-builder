@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Experience } from '../types/resume';
-import { Briefcase, Plus, Trash2 } from 'lucide-react';
+import { Briefcase, Plus } from 'lucide-react';
 import { EditorCard } from './ui/EditorCard';
 import { Input } from './ui/Input';
-import { Textarea } from './ui/Textarea';
 import { ActionButton } from './ui/ActionButton';
 import { DraggableCard } from './ui/DraggableCard';
 import { TagInput } from './ui/TagInput';
 import { EmptyState } from './ui/EmptyState';
+import { FormSection } from './ui/FormSection';
+import { DynamicFormList } from './ui/DynamicFormList';
+import { useExperienceEditor } from '../hooks/useExperienceEditor';
+import { useDragAndDrop } from '../hooks/useDragAndDrop';
 
 interface ExperienceEditorProps {
     experiences: Experience[];
@@ -18,127 +21,28 @@ export const ExperienceEditor: React.FC<ExperienceEditorProps> = ({
     experiences,
     onChange,
 }) => {
-    const [expandedId, setExpandedId] = useState<string | null>(null);
-    const [techInputs, setTechInputs] = useState<Record<string, string>>({});
-    const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-    const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+    const {
+        expandedId,
+        setExpandedId,
+        addExperience,
+        updateExperience,
+        removeExperience,
+        updateDescription,
+        addDescriptionPoint,
+        removeDescriptionPoint,
+        handleTechnologiesChange,
+        getTechInputValue,
+    } = useExperienceEditor(experiences, onChange);
 
-    const addExperience = () => {
-        const newExperience: Experience = {
-            id: Date.now().toString(),
-            company: '',
-            position: '',
-            startDate: '',
-            endDate: '',
-            current: false,
-            location: '',
-            description: [''],
-            technologies: [],
-        };
-        onChange([...experiences, newExperience]);
-        setExpandedId(newExperience.id);
-        setTechInputs(prev => ({ ...prev, [newExperience.id]: '' }));
-    };
-
-    const updateExperience = <K extends keyof Experience>(id: string, field: K, value: Experience[K]) => {
-        onChange(
-            experiences.map((exp) =>
-                exp.id === id ? { ...exp, [field]: value } : exp
-            )
-        );
-    };
-
-    const removeExperience = (id: string) => {
-        onChange(experiences.filter((exp) => exp.id !== id));
-        setTechInputs(prev => {
-            const newInputs = { ...prev };
-            delete newInputs[id];
-            return newInputs;
-        });
-    };
-
-    const updateDescription = (id: string, index: number, value: string) => {
-        const experience = experiences.find((exp) => exp.id === id);
-        if (experience) {
-            const newDescription = [...experience.description];
-            newDescription[index] = value;
-            updateExperience(id, 'description', newDescription);
-        }
-    };
-
-    const addDescriptionPoint = (id: string) => {
-        const experience = experiences.find((exp) => exp.id === id);
-        if (experience) {
-            updateExperience(id, 'description', [...experience.description, '']);
-        }
-    };
-
-    const removeDescriptionPoint = (id: string, index: number) => {
-        const experience = experiences.find((exp) => exp.id === id);
-        if (experience && experience.description.length > 1) {
-            const newDescription = experience.description.filter((_, i) => i !== index);
-            updateExperience(id, 'description', newDescription);
-        }
-    };
-
-    const handleTechnologiesChange = (id: string, value: string) => {
-        setTechInputs(prev => ({ ...prev, [id]: value }));
-        const technologies = value
-            .split(',')
-            .map((tech) => tech.trim())
-            .filter((tech) => tech.length > 0);
-        updateExperience(id, 'technologies', technologies);
-    };
-
-    const getTechInputValue = (id: string) => {
-        if (techInputs[id] !== undefined) {
-            return techInputs[id];
-        }
-        const experience = experiences.find(exp => exp.id === id);
-        return experience ? experience.technologies.join(', ') : '';
-    };
-
-    // Drag and Drop handlers
-    const handleDragStart = (e: React.DragEvent, index: number) => {
-        setDraggedIndex(index);
-        e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/html', '');
-    };
-
-    const handleDragOver = (e: React.DragEvent, index: number) => {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-        setDragOverIndex(index);
-    };
-
-    const handleDragLeave = () => {
-        setDragOverIndex(null);
-    };
-
-    const handleDrop = (e: React.DragEvent, dropIndex: number) => {
-        e.preventDefault();
-
-        if (draggedIndex === null || draggedIndex === dropIndex) {
-            setDraggedIndex(null);
-            setDragOverIndex(null);
-            return;
-        }
-
-        const newExperiences = [...experiences];
-        const draggedItem = newExperiences[draggedIndex];
-
-        newExperiences.splice(draggedIndex, 1);
-        newExperiences.splice(dropIndex, 0, draggedItem);
-
-        onChange(newExperiences);
-        setDraggedIndex(null);
-        setDragOverIndex(null);
-    };
-
-    const handleDragEnd = () => {
-        setDraggedIndex(null);
-        setDragOverIndex(null);
-    };
+    const {
+        draggedIndex,
+        dragOverIndex,
+        handleDragStart,
+        handleDragOver,
+        handleDragLeave,
+        handleDrop,
+        handleDragEnd,
+    } = useDragAndDrop(experiences, onChange);
 
     return (
         <EditorCard title="Work Experience" icon={Briefcase}>
@@ -166,7 +70,7 @@ export const ExperienceEditor: React.FC<ExperienceEditorProps> = ({
                         onDrop={handleDrop}
                         onDragEnd={handleDragEnd}
                     >
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <FormSection>
                             <Input
                                 label="Company"
                                 value={experience.company}
@@ -177,34 +81,36 @@ export const ExperienceEditor: React.FC<ExperienceEditorProps> = ({
                                 value={experience.position}
                                 onChange={(e) => updateExperience(experience.id, 'position', e.target.value)}
                             />
-                        </div>
+                        </FormSection>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                            <Input
-                                label="Start Date"
-                                value={experience.startDate}
-                                onChange={(e) => updateExperience(experience.id, 'startDate', e.target.value)}
-                                placeholder="Jan 2023"
-                            />
-                            <Input
-                                label="End Date"
-                                value={experience.endDate}
-                                onChange={(e) => updateExperience(experience.id, 'endDate', e.target.value)}
-                                placeholder="Present"
-                                disabled={experience.current}
-                            />
-                            <div className="flex items-center">
-                                <label className="flex items-center gap-2 mt-6">
-                                    <input
-                                        type="checkbox"
-                                        checked={experience.current}
-                                        onChange={(e) => updateExperience(experience.id, 'current', e.target.checked)}
-                                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                    />
-                                    <span className="text-sm text-gray-700">Current position</span>
-                                </label>
+                        <FormSection columns={1}>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <Input
+                                    label="Start Date"
+                                    value={experience.startDate}
+                                    onChange={(e) => updateExperience(experience.id, 'startDate', e.target.value)}
+                                    placeholder="Jan 2023"
+                                />
+                                <Input
+                                    label="End Date"
+                                    value={experience.endDate}
+                                    onChange={(e) => updateExperience(experience.id, 'endDate', e.target.value)}
+                                    placeholder="Present"
+                                    disabled={experience.current}
+                                />
+                                <div className="flex items-center">
+                                    <label className="flex items-center gap-2 mt-6">
+                                        <input
+                                            type="checkbox"
+                                            checked={experience.current}
+                                            onChange={(e) => updateExperience(experience.id, 'current', e.target.checked)}
+                                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        />
+                                        <span className="text-sm text-gray-700">Current position</span>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
+                        </FormSection>
 
                         <Input
                             label="Location"
@@ -214,39 +120,15 @@ export const ExperienceEditor: React.FC<ExperienceEditorProps> = ({
                             className="mb-4"
                         />
 
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Description
-                            </label>
-                            {experience.description.map((desc, index) => (
-                                <div key={index} className="flex gap-2 mb-2">
-                                    <Textarea
-                                        value={desc}
-                                        onChange={(e) => updateDescription(experience.id, index, e.target.value)}
-                                        rows={2}
-                                        placeholder="Describe your achievements and responsibilities..."
-                                        className="flex-1"
-                                    />
-                                    {experience.description.length > 1 && (
-                                        <ActionButton
-                                            variant="danger"
-                                            onClick={() => removeDescriptionPoint(experience.id, index)}
-                                            className="p-1"
-                                        >
-                                            <Trash2 size={16} />
-                                        </ActionButton>
-                                    )}
-                                </div>
-                            ))}
-                            <ActionButton
-                                variant="secondary"
-                                onClick={() => addDescriptionPoint(experience.id)}
-                                icon={Plus}
-                                className="text-sm"
-                            >
-                                Add bullet point
-                            </ActionButton>
-                        </div>
+                        <DynamicFormList
+                            label="Description"
+                            items={experience.description}
+                            onItemChange={(index, value) => updateDescription(experience.id, index, value)}
+                            onAddItem={() => addDescriptionPoint(experience.id)}
+                            onRemoveItem={(index) => removeDescriptionPoint(experience.id, index)}
+                            placeholder="Describe your achievements and responsibilities..."
+                            addButtonText="Add bullet point"
+                        />
 
                         <TagInput
                             label="Technologies Used (comma-separated)"
