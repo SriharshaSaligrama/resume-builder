@@ -90,7 +90,7 @@ export const ModernBlueTemplate: React.FC<ModernBlueTemplateProps> = ({
     )
   );
 
-  const renderExperience = () => (
+  const renderExperience = (stackDetails = false) => (
     resume.experiences.length > 0 && (
       <section className="mb-6 print:mb-5">
         <h3 className="text-xl print:text-lg font-semibold text-gray-800 mb-4 print:mb-3 border-b-2 border-blue-600 pb-1 print:break-after-avoid">
@@ -99,22 +99,41 @@ export const ModernBlueTemplate: React.FC<ModernBlueTemplateProps> = ({
         <div className="space-y-5 print:space-y-4">
           {resume.experiences.map((experience) => (
             <div key={experience.id} className="print:break-inside-avoid print:mb-4">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2 print:mb-1 gap-1 print:gap-0">
-                <div className="min-w-0 flex-1">
+              {stackDetails ? (
+                /* Stack layout for constrained layouts (two-column, sidebars) */
+                <div className="mb-2 print:mb-1">
                   <h4 className="text-lg print:text-sm font-semibold text-gray-800 break-words">
                     {experience.position}
                   </h4>
                   <p className="text-blue-600 print:text-blue-700 font-medium break-words text-base print:text-xs">
                     {experience.company}
                   </p>
+                  <div className="text-sm print:text-xs text-gray-600 print:text-gray-700 mt-1 print:mt-0.5">
+                    <p className="font-medium">
+                      {experience.startDate} - {experience.current ? 'Present' : experience.endDate}
+                    </p>
+                    {experience.location && <p className="break-words">{experience.location}</p>}
+                  </div>
                 </div>
-                <div className="text-left sm:text-right text-sm print:text-xs text-gray-600 print:text-gray-700 flex-shrink-0">
-                  <p className="whitespace-nowrap font-medium">
-                    {experience.startDate} - {experience.current ? 'Present' : experience.endDate}
-                  </p>
-                  {experience.location && <p className="break-words">{experience.location}</p>}
+              ) : (
+                /* Side-by-side layout for single column and compact */
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2 print:mb-1 gap-1 print:gap-0">
+                  <div className="min-w-0 flex-1">
+                    <h4 className="text-lg print:text-sm font-semibold text-gray-800 break-words">
+                      {experience.position}
+                    </h4>
+                    <p className="text-blue-600 print:text-blue-700 font-medium break-words text-base print:text-xs">
+                      {experience.company}
+                    </p>
+                  </div>
+                  <div className="text-left sm:text-right text-sm print:text-xs text-gray-600 print:text-gray-700 flex-shrink-0">
+                    <p className="whitespace-nowrap font-medium">
+                      {experience.startDate} - {experience.current ? 'Present' : experience.endDate}
+                    </p>
+                    {experience.location && <p className="break-words">{experience.location}</p>}
+                  </div>
                 </div>
-              </div>
+              )}
               
               {experience.description.length > 0 && (
                 <ul className="list-disc list-inside space-y-1 print:space-y-0.5 text-gray-700 print:text-gray-800 mb-3 print:mb-2 text-sm print:text-xs">
@@ -268,7 +287,7 @@ export const ModernBlueTemplate: React.FC<ModernBlueTemplateProps> = ({
     )
   );
 
-  const renderEducation = () => (
+  const renderEducation = (stackDetails = false) => (
     resume.education.length > 0 && (
       <section className="mb-6 print:mb-4">
         <h3 className="text-xl print:text-lg font-semibold text-gray-800 mb-4 print:mb-3 border-b-2 border-blue-600 pb-1 print:break-after-avoid">
@@ -276,24 +295,48 @@ export const ModernBlueTemplate: React.FC<ModernBlueTemplateProps> = ({
         </h3>
         <div className="space-y-4 print:space-y-3">
           {resume.education.map((edu) => (
-            <div key={edu.id} className="flex flex-col sm:flex-row sm:justify-between gap-2 print:gap-1 print:break-inside-avoid">
-              <div className="min-w-0 flex-1">
-                <h4 className="font-semibold text-gray-800 break-words text-base print:text-sm">
-                  {edu.degree} in {edu.field}
-                </h4>
-                <p className="text-blue-600 print:text-blue-700 break-words text-sm print:text-xs">
-                  {edu.institution}
-                </p>
-                {edu.location && (
-                  <p className="text-gray-600 print:text-gray-700 text-sm print:text-xs break-words">
-                    {edu.location}
+            <div key={edu.id} className="print:break-inside-avoid">
+              {stackDetails ? (
+                /* Stack layout for constrained layouts (two-column, sidebars) */
+                <div className="space-y-1 print:space-y-0.5">
+                  <h4 className="font-semibold text-gray-800 break-words text-base print:text-sm">
+                    {edu.degree} in {edu.field}
+                  </h4>
+                  <p className="text-blue-600 print:text-blue-700 break-words text-sm print:text-xs">
+                    {edu.institution}
                   </p>
-                )}
-              </div>
-              <div className="text-left sm:text-right text-gray-600 print:text-gray-700 flex-shrink-0 text-sm print:text-xs">
-                <p className="whitespace-nowrap font-medium">{edu.graduationDate}</p>
-                {edu.gpa && <p>GPA: {edu.gpa}</p>}
-              </div>
+                  {edu.location && (
+                    <p className="text-gray-600 print:text-gray-700 text-sm print:text-xs break-words">
+                      {edu.location}
+                    </p>
+                  )}
+                  <div className="text-gray-600 print:text-gray-700 text-sm print:text-xs">
+                    <p className="font-medium">{edu.graduationDate}</p>
+                    {edu.gpa && <p>GPA: {edu.gpa}</p>}
+                  </div>
+                </div>
+              ) : (
+                /* Side-by-side layout for single column and compact */
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-2 print:gap-1">
+                  <div className="min-w-0 flex-1">
+                    <h4 className="font-semibold text-gray-800 break-words text-base print:text-sm">
+                      {edu.degree} in {edu.field}
+                    </h4>
+                    <p className="text-blue-600 print:text-blue-700 break-words text-sm print:text-xs">
+                      {edu.institution}
+                    </p>
+                    {edu.location && (
+                      <p className="text-gray-600 print:text-gray-700 text-sm print:text-xs break-words">
+                        {edu.location}
+                      </p>
+                    )}
+                  </div>
+                  <div className="text-left sm:text-right text-gray-600 print:text-gray-700 flex-shrink-0 text-sm print:text-xs">
+                    <p className="whitespace-nowrap font-medium">{edu.graduationDate}</p>
+                    {edu.gpa && <p>GPA: {edu.gpa}</p>}
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -304,10 +347,10 @@ export const ModernBlueTemplate: React.FC<ModernBlueTemplateProps> = ({
   const renderSingleColumn = () => (
     <div className="p-6 print:p-4 print:pt-0">
       {renderSummary()}
-      {renderExperience()}
+      {renderExperience(false)}
       {renderProjects(false)}
       {renderSkills()}
-      {renderEducation()}
+      {renderEducation(false)}
     </div>
   );
 
@@ -316,12 +359,12 @@ export const ModernBlueTemplate: React.FC<ModernBlueTemplateProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-2 print:grid-cols-2 gap-6 print:gap-4">
         <div className="space-y-6 print:space-y-4">
           {renderSummary()}
-          {renderExperience()}
+          {renderExperience(true)}
         </div>
         <div className="space-y-6 print:space-y-4">
           {renderProjects(true)}
           {renderSkills()}
-          {renderEducation()}
+          {renderEducation(true)}
         </div>
       </div>
     </div>
@@ -332,11 +375,11 @@ export const ModernBlueTemplate: React.FC<ModernBlueTemplateProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-3 print:grid-cols-3 gap-6 print:gap-4">
         <div className="lg:col-span-1 print:col-span-1 space-y-6 print:space-y-4">
           {renderSkills()}
-          {renderEducation()}
+          {renderEducation(true)}
         </div>
         <div className="lg:col-span-2 print:col-span-2 space-y-6 print:space-y-4">
           {renderSummary()}
-          {renderExperience()}
+          {renderExperience(true)}
           {renderProjects(true)}
         </div>
       </div>
@@ -348,12 +391,12 @@ export const ModernBlueTemplate: React.FC<ModernBlueTemplateProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-3 print:grid-cols-3 gap-6 print:gap-4">
         <div className="lg:col-span-2 print:col-span-2 space-y-6 print:space-y-4">
           {renderSummary()}
-          {renderExperience()}
+          {renderExperience(true)}
           {renderProjects(true)}
         </div>
         <div className="lg:col-span-1 print:col-span-1 space-y-6 print:space-y-4">
           {renderSkills()}
-          {renderEducation()}
+          {renderEducation(true)}
         </div>
       </div>
     </div>
@@ -363,10 +406,10 @@ export const ModernBlueTemplate: React.FC<ModernBlueTemplateProps> = ({
     <div className="p-4 print:p-3 print:pt-0 text-sm print:text-xs">
       <div className="space-y-4 print:space-y-3">
         {renderSummary()}
-        {renderExperience()}
+        {renderExperience(false)}
         {renderProjects(false)}
         {renderSkills()}
-        {renderEducation()}
+        {renderEducation(false)}
       </div>
     </div>
   );
