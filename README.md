@@ -18,30 +18,75 @@ src/
   App.tsx                # Main application logic and UI flow
   index.css              # Tailwind and global styles
   main.tsx               # React entry point
-  components/            # UI components for editing and previewing resume
-    PersonalInfoEditor.tsx
-    ExperienceEditor.tsx
-    ProjectsEditor.tsx
-    SkillsEditor.tsx
-    EducationEditor.tsx
-    TemplateSelector.tsx
-    FontSelector.tsx
-    LayoutSelector.tsx
-    ResumePreview.tsx
-    templates/           # Individual template implementations
-      ModernBlueTemplate.tsx
-      ElegantPurpleTemplate.tsx
-      ProfessionalGreenTemplate.tsx
-      CreativeOrangeTemplate.tsx
-      MinimalGrayTemplate.tsx
-  data/                  # Static data for templates, fonts, layouts
-    templates.ts
+
+  components/
+    features/            # Feature editors for each resume section
+      PersonalInfoEditor.tsx
+      ExperienceEditor.tsx
+      ProjectsEditor.tsx
+      SkillsEditor.tsx
+      EducationEditor.tsx
+
+    layout/              # Layout and navigation components
+      Header.tsx
+      TabContent.tsx
+      TabNavigation.tsx
+
+    resume-templates/    # Resume rendering and template system
+      data/
+        colors.ts
+      layouts/
+        LayoutRenderer.tsx
+      preview/
+        ResumePreview.tsx
+      sections/
+        EducationSection.tsx
+        ExperienceSection.tsx
+        ProjectsSection.tsx
+        ResumeHeader.tsx
+        SkillsSection.tsx
+        SummarySection.tsx
+      selectors/
+        FontSelector.tsx
+        LayoutPreview.tsx
+        LayoutSelector.tsx
+        TemplateSelector.tsx
+      templates/
+        UnifiedTemplate.tsx
+
+    ui/                  # Reusable UI components
+      ActionButton.tsx
+      DraggableCard.tsx
+      DynamicFormList.tsx
+      EditorCard.tsx
+      EducationForm.tsx
+      EmptyState.tsx
+      FormField.tsx
+      FormGrid.tsx
+      FormSection.tsx
+      Input.tsx
+      TagInput.tsx
+      Textarea.tsx
+
+  data/                  # Static data for templates, fonts, layouts, tabs
     fonts.ts
     layouts.ts
-  hooks/
-    useLocalStorage.ts   # Custom hook for persistent state
+    tabs.ts
+    templates.ts
+
+  hooks/                 # Custom React hooks for state and logic
+    useDragAndDrop.ts
+    useEducationEditor.ts
+    useExperienceEditor.ts
+    useLocalStorage.ts
+    useProjectsEditor.ts
+    useSkillsEditor.ts
+    useTabNavigation.ts
+
   types/
     resume.ts            # TypeScript types for resume data
+
+  vite-env.d.ts          # Vite environment types
 ```
 
 ## Main Flow
@@ -51,17 +96,18 @@ src/
    - Default selections for template, font, and layout are also loaded or restored.
 
 2. **Editing:**
-   - The UI is divided into tabs: Personal Info, Experience, Projects, Skills, Education, and Design.
-   - Each tab uses a dedicated editor component to update the corresponding section of the resume.
+   - The UI is divided into tabs (see `data/tabs.ts`): Personal Info, Experience, Projects, Skills, Education, and Design.
+   - Each tab uses a dedicated editor component from `components/features/` to update the corresponding section of the resume.
    - All changes are immediately saved to local storage.
 
 3. **Customization:**
    - In the Design tab, users can select a template, font, and layout.
    - These options are defined in `data/templates.ts`, `data/fonts.ts`, and `data/layouts.ts`.
+   - The selectors in `components/resume-templates/selectors/` provide the UI for these choices.
 
 4. **Preview:**
    - The right panel (or a dedicated section) shows a live preview of the resume using the selected template, font, and layout.
-   - The `ResumePreview` component dynamically renders the appropriate template.
+   - The `ResumePreview` component in `components/resume-templates/preview/` dynamically renders the appropriate template.
 
 5. **Export & Print:**
    - Users can export their resume data as a JSON file.
@@ -70,10 +116,11 @@ src/
 ## Key Components
 
 - **App.tsx:** Orchestrates the UI, manages state, and handles tab navigation, export, and print actions.
-- **Editor Components:** Each section (personal info, experience, etc.) has its own editor for modularity.
-- **TemplateSelector, FontSelector, LayoutSelector:** Allow users to customize the look and feel of their resume.
-- **ResumePreview:** Renders the resume using the selected template, font, and layout.
-- **Templates:** Each template file in `components/templates/` provides a unique resume design.
+- **Feature Editors:** Each section (personal info, experience, etc.) has its own editor in `components/features/`.
+- **Layout Components:** Navigation and layout logic in `components/layout/`.
+- **Template System:** Resume rendering logic and templates in `components/resume-templates/`.
+- **UI Components:** Reusable form and UI elements in `components/ui/`.
+- **Selectors:** UI for choosing templates, fonts, and layouts in `components/resume-templates/selectors/`.
 
 ## Data Model
 
@@ -84,7 +131,7 @@ Defined in `types/resume.ts`:
 
 ## Customization
 
-- **Templates:** Add new templates by creating a new file in `components/templates/` and updating `data/templates.ts`.
+- **Templates:** Add new templates by creating a new file in `components/resume-templates/templates/` and updating `data/templates.ts`.
 - **Fonts & Layouts:** Extend `data/fonts.ts` and `data/layouts.ts` to add more options.
 
 ## Development
