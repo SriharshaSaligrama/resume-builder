@@ -1,14 +1,12 @@
 import { useState } from 'react';
-import { Resume, TemplateId, FontFamily, LayoutStyle } from './types/resume';
-import { PersonalInfoEditor } from './components/PersonalInfoEditor';
-import { ExperienceEditor } from './components/ExperienceEditor';
-import { ProjectsEditor } from './components/ProjectsEditor';
-import { SkillsEditor } from './components/SkillsEditor';
-import { EducationEditor } from './components/EducationEditor';
-import { TemplateSelector } from './components/TemplateSelector';
-import { ResumePreview } from './components/ResumePreview';
-import { useLocalStorage } from './hooks/useLocalStorage';
 import { FileText, Download, Eye, EyeOff, Save } from 'lucide-react';
+import { Resume, TemplateId, FontFamily, LayoutStyle } from './types/resume';
+import { ResumePreview } from './components/ResumePreview';
+import { TabNavigation } from './components/TabNavigation';
+import { TabContent } from './components/TabContent';
+import { useLocalStorage } from './hooks/useLocalStorage';
+import { useTabNavigation } from './hooks/useTabNavigation';
+import { resumeTabs } from './data/tabs';
 
 const initialResume: Resume = {
     personalInfo: {
@@ -47,7 +45,7 @@ function App() {
     const [selectedFont, setSelectedFont] = useLocalStorage<FontFamily>('selected-font', 'inter');
     const [selectedLayout, setSelectedLayout] = useLocalStorage<LayoutStyle>('selected-layout', 'single-column');
     const [showPreview, setShowPreview] = useState(false);
-    const [activeTab, setActiveTab] = useState('personal');
+    const { activeTab, handleTabChange } = useTabNavigation('personal');
 
     const handleExport = () => {
         const dataStr = JSON.stringify(resume, null, 2);
@@ -64,15 +62,6 @@ function App() {
     const handlePrint = () => {
         window.print();
     };
-
-    const tabs = [
-        { id: 'personal', label: 'Personal Info', icon: '👤' },
-        { id: 'experience', label: 'Experience', icon: '💼' },
-        { id: 'projects', label: 'Projects', icon: '🚀' },
-        { id: 'skills', label: 'Skills', icon: '🛠️' },
-        { id: 'education', label: 'Education', icon: '🎓' },
-        { id: 'template', label: 'Design', icon: '🎨' },
-    ];
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -122,72 +111,24 @@ function App() {
                     {/* Editor Panel */}
                     <div className="space-y-6 print:hidden">
                         {/* Tab Navigation */}
-                        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-1">
-                            <nav className="flex space-x-1">
-                                {tabs.map((tab) => (
-                                    <button
-                                        key={tab.id}
-                                        onClick={() => setActiveTab(tab.id)}
-                                        className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === tab.id
-                                            ? 'bg-blue-600 text-white'
-                                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                                            }`}
-                                    >
-                                        <span>{tab.icon}</span>
-                                        <span className="hidden sm:inline">{tab.label}</span>
-                                    </button>
-                                ))}
-                            </nav>
-                        </div>
+                        <TabNavigation
+                            tabs={resumeTabs}
+                            activeTab={activeTab}
+                            onTabChange={handleTabChange}
+                        />
 
                         {/* Tab Content */}
-                        <div className="min-h-[600px]">
-                            {activeTab === 'personal' && (
-                                <PersonalInfoEditor
-                                    personalInfo={resume.personalInfo}
-                                    onChange={(personalInfo) => setResume({ ...resume, personalInfo })}
-                                />
-                            )}
-
-                            {activeTab === 'experience' && (
-                                <ExperienceEditor
-                                    experiences={resume.experiences}
-                                    onChange={(experiences) => setResume({ ...resume, experiences })}
-                                />
-                            )}
-
-                            {activeTab === 'projects' && (
-                                <ProjectsEditor
-                                    projects={resume.projects}
-                                    onChange={(projects) => setResume({ ...resume, projects })}
-                                />
-                            )}
-
-                            {activeTab === 'skills' && (
-                                <SkillsEditor
-                                    skills={resume.skills}
-                                    onChange={(skills) => setResume({ ...resume, skills })}
-                                />
-                            )}
-
-                            {activeTab === 'education' && (
-                                <EducationEditor
-                                    education={resume.education}
-                                    onChange={(education) => setResume({ ...resume, education })}
-                                />
-                            )}
-
-                            {activeTab === 'template' && (
-                                <TemplateSelector
-                                    selectedTemplate={selectedTemplate}
-                                    selectedFont={selectedFont}
-                                    selectedLayout={selectedLayout}
-                                    onTemplateChange={setSelectedTemplate}
-                                    onFontChange={setSelectedFont}
-                                    onLayoutChange={setSelectedLayout}
-                                />
-                            )}
-                        </div>
+                        <TabContent
+                            activeTab={activeTab}
+                            resume={resume}
+                            selectedTemplate={selectedTemplate}
+                            selectedFont={selectedFont}
+                            selectedLayout={selectedLayout}
+                            onResumeChange={setResume}
+                            onTemplateChange={setSelectedTemplate}
+                            onFontChange={setSelectedFont}
+                            onLayoutChange={setSelectedLayout}
+                        />
                     </div>
 
                     {/* Preview Panel */}
@@ -221,319 +162,6 @@ function App() {
                     </div>
                 </div>
             </div>
-
-            {/* Enhanced Print Styles */}
-            <style>{`
-        @media print {
-          @page {
-            size: A4;
-            margin: 0.75in 0.6in 0.75in 0.6in;
-          }
-          
-          body {
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-            font-size: 11px;
-            line-height: 1.3;
-            color: #1f2937;
-          }
-          
-          .print\\:hidden {
-            display: none !important;
-          }
-          
-          .print\\:block {
-            display: block !important;
-          }
-          
-          .print\\:break-inside-avoid {
-            break-inside: avoid;
-            page-break-inside: avoid;
-          }
-          
-          .print\\:break-after-avoid {
-            break-after: avoid;
-            page-break-after: avoid;
-          }
-          
-          .print\\:break-before-page {
-            break-before: page;
-            page-break-before: always;
-          }
-          
-          /* Section spacing */
-          .print\\:mb-4 {
-            margin-bottom: 1rem;
-          }
-          
-          .print\\:mb-5 {
-            margin-bottom: 1.25rem;
-          }
-          
-          .print\\:mb-6 {
-            margin-bottom: 1.5rem;
-          }
-          
-          .print\\:pt-0 {
-            padding-top: 0;
-          }
-          
-          /* Spacing utilities */
-          .print\\:space-y-0 > * + * {
-            margin-top: 0;
-          }
-          
-          .print\\:space-y-0\\.5 > * + * {
-            margin-top: 0.125rem;
-          }
-          
-          .print\\:space-y-1 > * + * {
-            margin-top: 0.25rem;
-          }
-          
-          .print\\:space-y-2 > * + * {
-            margin-top: 0.5rem;
-          }
-          
-          .print\\:space-y-3 > * + * {
-            margin-top: 0.75rem;
-          }
-          
-          .print\\:space-y-4 > * + * {
-            margin-top: 1rem;
-          }
-          
-          /* Ensure proper spacing between major sections */
-          section {
-            margin-bottom: 1.5rem;
-            break-inside: avoid;
-            page-break-inside: avoid;
-          }
-          
-          section:last-child {
-            margin-bottom: 0;
-          }
-          
-          /* Better handling of section headers */
-          h3 {
-            break-after: avoid;
-            page-break-after: avoid;
-            orphans: 3;
-            widows: 3;
-          }
-          
-          /* Experience and project entries */
-          .print\\:break-inside-avoid {
-            orphans: 2;
-            widows: 2;
-          }
-          
-          /* Ensure content doesn't get cut off at page edges */
-          * {
-            box-decoration-break: clone;
-            -webkit-box-decoration-break: clone;
-          }
-          
-          /* Better list handling */
-          ul, ol {
-            break-inside: avoid;
-            page-break-inside: avoid;
-          }
-          
-          li {
-            break-inside: avoid;
-            page-break-inside: avoid;
-          }
-          
-          /* Technology tags */
-          .print\\:gap-1 {
-            gap: 0.25rem;
-          }
-          
-          /* Header gradient for print */
-          .print\\:bg-blue-700 {
-            background-color: #1d4ed8 !important;
-            background-image: none !important;
-          }
-          
-          .print\\:bg-purple-700 {
-            background-color: #7c3aed !important;
-            background-image: none !important;
-          }
-          
-          .print\\:bg-emerald-700 {
-            background-color: #047857 !important;
-            background-image: none !important;
-          }
-          
-          .print\\:bg-orange-700 {
-            background-color: #c2410c !important;
-            background-image: none !important;
-          }
-          
-          .print\\:bg-gray-800 {
-            background-color: #1f2937 !important;
-            background-image: none !important;
-          }
-          
-          /* Text colors for print */
-          .print\\:text-blue-700 {
-            color: #1d4ed8 !important;
-          }
-          
-          .print\\:text-blue-900 {
-            color: #1e3a8a !important;
-          }
-          
-          .print\\:text-purple-700 {
-            color: #7c3aed !important;
-          }
-          
-          .print\\:text-purple-900 {
-            color: #581c87 !important;
-          }
-          
-          .print\\:text-emerald-700 {
-            color: #047857 !important;
-          }
-          
-          .print\\:text-emerald-900 {
-            color: #064e3b !important;
-          }
-          
-          .print\\:text-orange-700 {
-            color: #c2410c !important;
-          }
-          
-          .print\\:text-orange-900 {
-            color: #9a3412 !important;
-          }
-          
-          .print\\:text-gray-700 {
-            color: #374151 !important;
-          }
-          
-          .print\\:text-gray-800 {
-            color: #1f2937 !important;
-          }
-          
-          .print\\:text-gray-900 {
-            color: #111827 !important;
-          }
-          
-          /* Background colors for print */
-          .print\\:bg-blue-50 {
-            background-color: #eff6ff !important;
-          }
-          
-          .print\\:bg-purple-50 {
-            background-color: #faf5ff !important;
-          }
-          
-          .print\\:bg-emerald-50 {
-            background-color: #ecfdf5 !important;
-          }
-          
-          .print\\:bg-orange-50 {
-            background-color: #fff7ed !important;
-          }
-          
-          .print\\:bg-gray-50 {
-            background-color: #f9fafb !important;
-          }
-          
-          /* Font sizes for print */
-          .print\\:text-xs {
-            font-size: 0.75rem;
-            line-height: 1rem;
-          }
-          
-          .print\\:text-sm {
-            font-size: 0.875rem;
-            line-height: 1.25rem;
-          }
-          
-          .print\\:text-lg {
-            font-size: 1.125rem;
-            line-height: 1.75rem;
-          }
-          
-          .print\\:text-2xl {
-            font-size: 1.5rem;
-            line-height: 2rem;
-          }
-          
-          .print\\:text-\\[10px\\] {
-            font-size: 10px;
-          }
-          
-          /* Icon sizes for print */
-          .print\\:w-2\\.5 {
-            width: 0.625rem;
-          }
-          
-          .print\\:h-2\\.5 {
-            height: 0.625rem;
-          }
-          
-          .print\\:w-3 {
-            width: 0.75rem;
-          }
-          
-          .print\\:h-3 {
-            height: 0.75rem;
-          }
-          
-          /* Padding adjustments for print */
-          .print\\:p-4 {
-            padding: 1rem;
-          }
-          
-          .print\\:px-1\\.5 {
-            padding-left: 0.375rem;
-            padding-right: 0.375rem;
-          }
-          
-          .print\\:py-0\\.5 {
-            padding-top: 0.125rem;
-            padding-bottom: 0.125rem;
-          }
-          
-          /* Line height adjustments */
-          .print\\:leading-normal {
-            line-height: 1.5;
-          }
-          
-          /* Margin adjustments */
-          .print\\:mb-0\\.5 {
-            margin-bottom: 0.125rem;
-          }
-          
-          .print\\:mb-1 {
-            margin-bottom: 0.25rem;
-          }
-          
-          .print\\:mb-2 {
-            margin-bottom: 0.5rem;
-          }
-          
-          .print\\:mb-3 {
-            margin-bottom: 0.75rem;
-          }
-          
-          /* Ensure proper page margins and content flow */
-          html, body {
-            height: auto;
-            overflow: visible;
-          }
-          
-          /* Better handling of long URLs */
-          a {
-            word-break: break-all;
-            hyphens: auto;
-          }
-        }
-      `}</style>
         </div>
     );
 }
