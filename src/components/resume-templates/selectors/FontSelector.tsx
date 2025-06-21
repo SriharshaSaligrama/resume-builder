@@ -1,6 +1,6 @@
 import React from 'react';
-import { FontFamily } from '../types/resume';
-import { resumeFonts } from '../data/fonts';
+import { FontFamily } from '../../../types/resume';
+import { resumeFonts } from '../../../data/fonts';
 import { Type, Check } from 'lucide-react';
 
 interface FontSelectorProps {
@@ -51,8 +51,8 @@ export const FontSelector: React.FC<FontSelectorProps> = ({
                         key={font.id}
                         onClick={() => onFontChange(font.id)}
                         className={`relative cursor-pointer rounded-lg border-2 p-4 transition-all duration-200 hover:shadow-md ${selectedFont === font.id
-                                ? 'border-blue-500 bg-blue-50'
-                                : 'border-gray-200 hover:border-gray-300'
+                            ? 'border-blue-500 bg-blue-50'
+                            : 'border-gray-200 hover:border-gray-300'
                             }`}
                     >
                         {/* Font Preview */}

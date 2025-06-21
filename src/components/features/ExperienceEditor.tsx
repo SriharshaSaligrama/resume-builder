@@ -1,16 +1,16 @@
 import React from 'react';
-import { Experience } from '../types/resume';
+import { Experience } from '../../types/resume';
 import { Briefcase, Plus } from 'lucide-react';
-import { EditorCard } from './ui/EditorCard';
-import { Input } from './ui/Input';
-import { ActionButton } from './ui/ActionButton';
-import { DraggableCard } from './ui/DraggableCard';
-import { TagInput } from './ui/TagInput';
-import { EmptyState } from './ui/EmptyState';
-import { FormSection } from './ui/FormSection';
-import { DynamicFormList } from './ui/DynamicFormList';
-import { useExperienceEditor } from '../hooks/useExperienceEditor';
-import { useDragAndDrop } from '../hooks/useDragAndDrop';
+import { EditorCard } from '../ui/EditorCard';
+import { Input } from '../ui/Input';
+import { ActionButton } from '../ui/ActionButton';
+import { DraggableCard } from '../ui/DraggableCard';
+import { TagInput } from '../ui/TagInput';
+import { EmptyState } from '../ui/EmptyState';
+import { FormSection } from '../ui/FormSection';
+import { DynamicFormList } from '../ui/DynamicFormList';
+import { useExperienceEditor } from '../../hooks/useExperienceEditor';
+import { useDragAndDrop } from '../../hooks/useDragAndDrop';
 
 interface ExperienceEditorProps {
     experiences: Experience[];

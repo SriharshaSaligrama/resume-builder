@@ -1,6 +1,6 @@
 import React from 'react';
-import { Resume, TemplateId, FontFamily, LayoutStyle } from '../types/resume';
-import { UnifiedTemplate } from './templates/UnifiedTemplate';
+import { Resume, TemplateId, FontFamily, LayoutStyle } from '../../../types/resume';
+import { UnifiedTemplate } from '../templates/UnifiedTemplate';
 
 interface ResumePreviewProps {
     resume: Resume;

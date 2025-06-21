@@ -1,17 +1,17 @@
 import React from 'react';
-import { Project } from '../types/resume';
+import { Project } from '../../types/resume';
 import { FolderOpen, Plus } from 'lucide-react';
-import { EditorCard } from './ui/EditorCard';
-import { Input } from './ui/Input';
-import { Textarea } from './ui/Textarea';
-import { ActionButton } from './ui/ActionButton';
-import { DraggableCard } from './ui/DraggableCard';
-import { TagInput } from './ui/TagInput';
-import { EmptyState } from './ui/EmptyState';
-import { FormSection } from './ui/FormSection';
-import { DynamicFormList } from './ui/DynamicFormList';
-import { useProjectsEditor } from '../hooks/useProjectsEditor';
-import { useDragAndDrop } from '../hooks/useDragAndDrop';
+import { EditorCard } from '../ui/EditorCard';
+import { Input } from '../ui/Input';
+import { Textarea } from '../ui/Textarea';
+import { ActionButton } from '../ui/ActionButton';
+import { DraggableCard } from '../ui/DraggableCard';
+import { TagInput } from '../ui/TagInput';
+import { EmptyState } from '../ui/EmptyState';
+import { FormSection } from '../ui/FormSection';
+import { DynamicFormList } from '../ui/DynamicFormList';
+import { useProjectsEditor } from '../../hooks/useProjectsEditor';
+import { useDragAndDrop } from '../../hooks/useDragAndDrop';
 
 interface ProjectsEditorProps {
     projects: Project[];

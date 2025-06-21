@@ -1,9 +1,9 @@
 import React from 'react';
-import { PersonalInfo } from '../types/resume';
+import { PersonalInfo } from '../../types/resume';
 import { User, Mail, Phone, MapPin, Globe, Linkedin, Github } from 'lucide-react';
-import { EditorCard } from './ui/EditorCard';
-import { Input } from './ui/Input';
-import { Textarea } from './ui/Textarea';
+import { EditorCard } from '../ui/EditorCard';
+import { Input } from '../ui/Input';
+import { Textarea } from '../ui/Textarea';
 
 interface PersonalInfoEditorProps {
     personalInfo: PersonalInfo;

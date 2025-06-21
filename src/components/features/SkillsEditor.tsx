@@ -1,12 +1,12 @@
 import React from 'react';
-import { Skill } from '../types/resume';
+import { Skill } from '../../types/resume';
 import { Code, Plus, Trash2 } from 'lucide-react';
-import { EditorCard } from './ui/EditorCard';
-import { Input } from './ui/Input';
-import { Textarea } from './ui/Textarea';
-import { ActionButton } from './ui/ActionButton';
-import { EmptyState } from './ui/EmptyState';
-import { useSkillsEditor } from '../hooks/useSkillsEditor';
+import { EditorCard } from '../ui/EditorCard';
+import { Input } from '../ui/Input';
+import { Textarea } from '../ui/Textarea';
+import { ActionButton } from '../ui/ActionButton';
+import { EmptyState } from '../ui/EmptyState';
+import { useSkillsEditor } from '../../hooks/useSkillsEditor';
 
 interface SkillsEditorProps {
     skills: Skill[];

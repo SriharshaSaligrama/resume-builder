@@ -1,6 +1,6 @@
 import React from 'react';
-import { TemplateId, FontFamily, LayoutStyle } from '../types/resume';
-import { resumeTemplates } from '../data/templates';
+import { TemplateId, FontFamily, LayoutStyle } from '../../../types/resume';
+import { resumeTemplates } from '../../../data/templates';
 import { FontSelector } from './FontSelector';
 import { LayoutSelector } from './LayoutSelector';
 import { Palette, Check } from 'lucide-react';
@@ -59,8 +59,8 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                             key={template.id}
                             onClick={() => onTemplateChange(template.id)}
                             className={`relative cursor-pointer rounded-lg border-2 transition-all duration-200 hover:shadow-md ${selectedTemplate === template.id
-                                    ? `${getBorderColor(template.primaryColor)} bg-${template.primaryColor}-50`
-                                    : 'border-gray-200 hover:border-gray-300'
+                                ? `${getBorderColor(template.primaryColor)} bg-${template.primaryColor}-50`
+                                : 'border-gray-200 hover:border-gray-300'
                                 }`}
                         >
                             {/* Template Preview */}

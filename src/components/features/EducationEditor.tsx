@@ -1,11 +1,11 @@
 import React from 'react';
-import { Education } from '../types/resume';
+import { Education } from '../../types/resume';
 import { GraduationCap, Plus, Trash2 } from 'lucide-react';
-import { EditorCard } from './ui/EditorCard';
-import { ActionButton } from './ui/ActionButton';
-import { EmptyState } from './ui/EmptyState';
-import { EducationForm } from './ui/EducationForm';
-import { useEducationEditor } from '../hooks/useEducationEditor';
+import { EditorCard } from '../ui/EditorCard';
+import { ActionButton } from '../ui/ActionButton';
+import { EmptyState } from '../ui/EmptyState';
+import { EducationForm } from '../ui/EducationForm';
+import { useEducationEditor } from '../../hooks/useEducationEditor';
 
 interface EducationEditorProps {
     education: Education[];

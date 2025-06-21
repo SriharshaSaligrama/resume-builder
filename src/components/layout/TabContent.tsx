@@ -1,11 +1,11 @@
 import React from 'react';
-import { Resume, TemplateId, FontFamily, LayoutStyle } from '../types/resume';
-import { PersonalInfoEditor } from './PersonalInfoEditor';
-import { ExperienceEditor } from './ExperienceEditor';
-import { ProjectsEditor } from './ProjectsEditor';
-import { SkillsEditor } from './SkillsEditor';
-import { EducationEditor } from './EducationEditor';
-import { TemplateSelector } from './TemplateSelector';
+import { Resume, TemplateId, FontFamily, LayoutStyle } from '../../types/resume';
+import { PersonalInfoEditor } from '../features/PersonalInfoEditor';
+import { ExperienceEditor } from '../features/ExperienceEditor';
+import { ProjectsEditor } from '../features/ProjectsEditor';
+import { SkillsEditor } from '../features/SkillsEditor';
+import { EducationEditor } from '../features/EducationEditor';
+import { TemplateSelector } from '../resume-templates/selectors/TemplateSelector';
 
 interface TabContentProps {
     activeTab: string;
