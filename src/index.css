@@ -128,8 +128,6 @@
 
     /* Better handling of section headers */
     h3 {
-        break-after: avoid !important;
-        page-break-after: avoid !important;
         orphans: 3 !important;
         widows: 3 !important;
     }
@@ -149,11 +147,6 @@
     /* Better list handling */
     ul,
     ol {
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-    }
-
-    li {
         break-inside: avoid !important;
         page-break-inside: avoid !important;
     }
@@ -334,16 +327,28 @@
         margin-bottom: 0.75rem !important;
     }
 
-    /* Ensure proper page margins and content flow */
-    html,
-    body {
-        height: auto !important;
-        overflow: visible !important;
+    /* Header repeat on each page */
+    .resume-header {
+        position: relative;
     }
 
-    /* Better handling of long URLs */
-    a {
-        word-break: break-all !important;
-        hyphens: auto !important;
+    @media print {
+        .resume-header {
+            position: sticky;
+            top: 0;
+            display: block;
+            break-after: avoid;
+            page-break-after: avoid;
+        }
+
+        .page-break-after {
+            break-after: page;
+            page-break-after: always;
+        }
+
+        .page-content {
+            break-before: auto;
+            page-break-before: auto;
+        }
     }
 }

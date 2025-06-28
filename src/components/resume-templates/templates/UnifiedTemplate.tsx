@@ -32,7 +32,9 @@ export const UnifiedTemplate: React.FC<UnifiedTemplateProps> = ({
             className="bg-white shadow-lg max-w-4xl mx-auto min-h-screen print:shadow-none print:max-w-none print:mx-0"
             style={{ fontFamily: fontFamilyStyle }}
         >
-            <ResumeHeader personalInfo={resume.personalInfo} colors={colors} />
+            <div className="resume-header">
+                <ResumeHeader personalInfo={resume.personalInfo} colors={colors} />
+            </div>
             <LayoutRenderer resume={resume} layoutStyle={layoutStyle} colors={colors} />
         </div>
     );

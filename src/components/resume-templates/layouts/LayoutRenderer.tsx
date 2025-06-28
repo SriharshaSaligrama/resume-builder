@@ -22,8 +22,8 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
         <div className="p-6 print:p-4 print:pt-0">
             <SummarySection summary={resume.personalInfo.summary} colors={colors} />
             <ExperienceSection experiences={resume.experiences} colors={colors} stackDetails={false} />
-            <ProjectsSection projects={resume.projects} colors={colors} stackUrls={false} />
             <SkillsSection skills={resume.skills} colors={colors} />
+            <ProjectsSection projects={resume.projects} colors={colors} stackUrls={false} />
             <EducationSection education={resume.education} colors={colors} stackDetails={false} />
         </div>
     );
@@ -34,10 +34,10 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
                 <div className="space-y-6 print:space-y-4">
                     <SummarySection summary={resume.personalInfo.summary} colors={colors} />
                     <ExperienceSection experiences={resume.experiences} colors={colors} stackDetails={true} />
+                    <SkillsSection skills={resume.skills} colors={colors} />
                 </div>
                 <div className="space-y-6 print:space-y-4">
                     <ProjectsSection projects={resume.projects} colors={colors} stackUrls={true} />
-                    <SkillsSection skills={resume.skills} colors={colors} />
                     <EducationSection education={resume.education} colors={colors} stackDetails={true} />
                 </div>
             </div>
