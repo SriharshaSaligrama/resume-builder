@@ -8,7 +8,10 @@ A modern, customizable resume builder built with React, TypeScript, Vite, and Ta
 - **Template Selection:** Choose from multiple professionally designed resume templates.
 - **Font & Layout Customization:** Select from various fonts and layouts to personalize your resume.
 - **Live Preview:** Instantly preview your resume as you edit.
-- **Export & Print:** Export your resume data as JSON or print/save as PDF.
+- **Export & Print:**
+  - Export your resume data as JSON.
+  - Print/save as PDF with a print-optimized page layout.
+  - Export your resume as a Word (.docx) file.
 - **Persistent Data:** All changes are saved in your browser's local storage.
 
 ## Project Structure
@@ -18,6 +21,8 @@ src/
   App.tsx                # Main application logic and UI flow
   index.css              # Tailwind and global styles
   main.tsx               # React entry point
+  utils/
+    wordExport.ts        # Export resume as Word (.docx)
 
   components/
     features/            # Feature editors for each resume section
@@ -36,7 +41,7 @@ src/
       data/
         colors.ts
       layouts/
-        LayoutRenderer.tsx
+        LayoutRenderer.tsx  # Handles all web and print layouts
       preview/
         ResumePreview.tsx
       sections/
@@ -112,15 +117,17 @@ src/
 5. **Export & Print:**
    - Users can export their resume data as a JSON file.
    - The Print/Save PDF button triggers the browser's print dialog, with print-optimized styles for professional output.
+   - Users can export their resume as a Word (.docx) file using the Word export feature.
 
 ## Key Components
 
-- **App.tsx:** Orchestrates the UI, manages state, and handles tab navigation, export, and print actions.
+- **App.tsx:** Orchestrates the UI, manages state, and handles tab navigation, export, print, and Word export actions.
 - **Feature Editors:** Each section (personal info, experience, etc.) has its own editor in `components/features/`.
 - **Layout Components:** Navigation and layout logic in `components/layout/`.
 - **Template System:** Resume rendering logic and templates in `components/resume-templates/`.
 - **UI Components:** Reusable form and UI elements in `components/ui/`.
 - **Selectors:** UI for choosing templates, fonts, and layouts in `components/resume-templates/selectors/`.
+- **Word Export:** Utility in `utils/wordExport.ts` for exporting the resume as a Word document.
 
 ## Data Model
 
