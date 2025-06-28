@@ -35,7 +35,9 @@ export const UnifiedTemplate: React.FC<UnifiedTemplateProps> = ({
             <div className="resume-header">
                 <ResumeHeader personalInfo={resume.personalInfo} colors={colors} />
             </div>
-            <LayoutRenderer resume={resume} layoutStyle={layoutStyle} colors={colors} />
+            <div className="page-content">
+                <LayoutRenderer resume={resume} layoutStyle={layoutStyle} colors={colors} />
+            </div>
         </div>
     );
 };

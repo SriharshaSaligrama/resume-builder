@@ -81,8 +81,8 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
             <div className="space-y-4 print:space-y-3">
                 <SummarySection summary={resume.personalInfo.summary} colors={colors} />
                 <ExperienceSection experiences={resume.experiences} colors={colors} stackDetails={false} />
-                <ProjectsSection projects={resume.projects} colors={colors} stackUrls={false} />
                 <SkillsSection skills={resume.skills} colors={colors} />
+                <ProjectsSection projects={resume.projects} colors={colors} stackUrls={false} />
                 <EducationSection education={resume.education} colors={colors} stackDetails={false} />
             </div>
         </div>

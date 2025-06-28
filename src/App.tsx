@@ -8,6 +8,7 @@ import { useLocalStorage } from './hooks/useLocalStorage';
 import { useTabNavigation } from './hooks/useTabNavigation';
 import { resumeTabs } from './data/tabs';
 import { Eye } from 'lucide-react';
+import { exportToWord } from './utils/wordExport';
 
 const initialResume: Resume = {
     personalInfo: {
@@ -65,6 +66,10 @@ function App() {
         window.print();
     };
 
+    const handleExportWord = () => {
+        exportToWord(resume);
+    };
+
     return (
         <div className="min-h-screen bg-gray-50">
             <Header
@@ -72,6 +77,7 @@ function App() {
                 onTogglePreview={() => setShowPreview(!showPreview)}
                 onExport={handleExport}
                 onPrint={handlePrint}
+                onExportWord={handleExportWord}
             />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 print:max-w-none print:mx-0 print:px-0 print:py-0">

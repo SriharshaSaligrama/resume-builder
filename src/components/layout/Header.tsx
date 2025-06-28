@@ -1,11 +1,12 @@
 import React from 'react';
-import { FileText, Download, Eye, EyeOff, Save } from 'lucide-react';
+import { FileText, Download, Eye, EyeOff, Save, FileOutput } from 'lucide-react';
 
 interface HeaderProps {
     showPreview: boolean;
     onTogglePreview: () => void;
     onExport: () => void;
     onPrint: () => void;
+    onExportWord: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -13,6 +14,7 @@ export const Header: React.FC<HeaderProps> = ({
     onTogglePreview,
     onExport,
     onPrint,
+    onExportWord,
 }) => {
     return (
         <header className="bg-white shadow-sm border-b border-gray-200 print:hidden">
@@ -26,7 +28,7 @@ export const Header: React.FC<HeaderProps> = ({
                                 Resume Builder
                             </h1>
                             <p className="text-sm text-gray-600 leading-relaxed hidden sm:block">
-                                Transform Your Experience Into Opportunity
+                                Professional resume for software engineers
                             </p>
                         </div>
                     </div>
@@ -49,6 +51,15 @@ export const Header: React.FC<HeaderProps> = ({
                             <Download size={14} className="sm:w-4 sm:h-4" />
                             <span className="hidden sm:inline">Export Data</span>
                             <span className="sm:hidden">Export</span>
+                        </button>
+
+                        <button
+                            onClick={onExportWord}
+                            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-purple-600 bg-purple-50 rounded-md hover:bg-purple-100 transition-colors"
+                        >
+                            <FileOutput size={14} className="sm:w-4 sm:h-4" />
+                            <span className="hidden sm:inline">Export Word</span>
+                            <span className="sm:hidden">Word</span>
                         </button>
 
                         <button
